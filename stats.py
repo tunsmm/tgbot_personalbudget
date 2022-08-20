@@ -3,64 +3,57 @@ from datetime import date, datetime, timezone, timedelta
 import db
 
 
-def get_general_stats() -> str:
-    return get_today_stats() + "\n\n" + get_month_stats()
-
-
-def get_today_stats() -> str:
-    now = _get_now_datetime()
-    today_day = f'{now.year:04d}-{now.month:02d}-{now.day:02d}'
+def get_period_stats(codename: str, mode: str, day_from: date, day_to: date) -> str:
     cursor = db.get_cursor()
     cursor.execute("select sum(amount)"
-                   f"from expense where created='{today_day}'")
+                   f"from expense where created >= '{day_from}'"
+                   f"and created <= '{day_to}'")
     result = cursor.fetchone()
     if not result[0]:
-        return "No expenses today"
-    all_today_expenses = result[0]
-    cursor.execute("select sum(amount) "
-                   f"from expense where created='{today_day}' "
-                   "and category_codename in (select codename "
-                   "from category where is_base_expense=true)")
-    result = cursor.fetchone()
-    base_today_expenses = result[0] if result[0] else 0
-    return (f"Today's expenses:\n"
-            f"total — {all_today_expenses}\n"
-            f"basic — {base_today_expenses} from {_get_budget_limit()}\n\n"
-            f"Current month: /month")
+        return f"No expenses {codename}"
+    all_expenses = result[0]
+    
+    if mode == "short": 
+        return (f"Expenses {codename}:\n"
+            f"total — {all_expenses}\n"
+            f"See full stats: /{codename}")
+    elif mode == "full":
+        cursor.execute("select sum(amount) "
+                    f"from expense where created >= '{day_from}' "
+                    f"and created <= '{day_to}' "
+                    "and category_codename in (select codename "
+                    "from category where is_base_expense=true)")
+        result = cursor.fetchone()
+        base_expenses = result[0] if result[0] else 0
+        return (f"Expenses {codename}:\n"
+                f"total — {all_expenses}\n"
+                f"basic — {base_expenses} from {_get_budget_limit()}\n\n"
+                f"See general stats: /stats")
+    else: 
+        return "Unexpected mode"
 
 
-def get_month_stats() -> str:
+def get_today_stats(mode: str) -> str:
+    now = _get_now_datetime()
+    today_day = f'{now.year:04d}-{now.month:02d}-{now.day:02d}'
+    result = get_period_stats("today", mode, today_day, today_day)
+    return result
+
+
+def get_yesterday_stats(mode: str) -> str:
+    now = _get_now_datetime()
+    yesterday = f'{now.year:04d}-{now.month:02d}-{(now.day-1):02d}'
+    result = get_period_stats("yesterday", mode, yesterday, yesterday)
+    return result
+
+
+def get_current_month_stats(mode: str) -> str:
     now = _get_now_datetime()
     first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
-    cursor = db.get_cursor()
-    cursor.execute(f"select sum(amount) "
-                   f"from expense where created >= '{first_day_of_month}'")
-    result = cursor.fetchone()
-    if not result[0]:
-        return "No expenses in this month"
-    all_month_expenses = result[0]
-    cursor.execute(f"select sum(amount) "
-                   f"from expense where created >= '{first_day_of_month}' "
-                   f"and category_codename in (select codename "
-                   f"from category where is_base_expense=true)")
-    result = cursor.fetchone()
-    base_month_expenses = result[0] if result[0] else 0
-    return (f"Month's expenses:\n"
-            f"total — {all_month_expenses}\n"
-            f"basic — {base_month_expenses} from "
-            f"{now.day * _get_budget_limit()}"
-            f"Current day: /today")
+    today_day = f'{now.year:04d}-{now.month:02d}-{now.day:02d}'
+    result = get_period_stats("month", mode, first_day_of_month, today_day)
+    return result
 
-
-def _get_all_expenses(period) -> int:
-    cursor = db.get_cursor()
-    cursor.execute(f"select sum(amount) "
-                   f"from expense where created >= '{period}'")
-    result = cursor.fetchone()
-    if not result[0]:
-        return "No expenses in this period"
-    all_month_expenses = result[0]
-    return 0
 
 def _get_budget_limit() -> int:
     return db.fetchall("budget", ["daily_limit"])[0]["daily_limit"]
