@@ -1,8 +1,8 @@
-from datetime import datetime, timezone, timedelta
 from typing import NamedTuple
 
 from categories import Categories
 from messages import parse_message
+from stats import _get_now_formatted
 import db
 
 
@@ -45,18 +45,3 @@ def last():
 
 def delete_expense(row_id: int) -> None:
     db.delete("expense", row_id)
-
-
-def _get_now_formatted() -> str:
-    return _get_now_datetime().strftime("%Y-%m-%d")
-
-
-def _get_now_datetime():
-    timezone_offset = +3.0  
-    tzinfo = timezone(timedelta(hours=timezone_offset))
-    now = datetime.now(tzinfo)
-    return now
-
-
-def _get_budget_limit() -> int:
-    return db.fetchall("budget", ["daily_limit"])[0]["daily_limit"]

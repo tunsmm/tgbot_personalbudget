@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import aiohttp
 
 from categories import Categories
+from stats import get_general_stats
 import exceptions
 import expenses
 
@@ -34,7 +35,8 @@ async def send_welcome(message: types.Message):
         "Bot for budgeting\n\n"
         "Add expenses: 250 taxi\n"
         "Last expenses: /expenses\n"
-        "Categories of expenses: /categories",
+        "Categories of expenses: /categories\n"
+        "Statistics: /stats",
         reply=False)
 
 
@@ -54,12 +56,19 @@ async def list_expenses(message: types.Message):
     await message.reply(answer_message, reply=False)
 
 
-@dp.message_handler(commands=['categories', 'cats'])
+@dp.message_handler(commands=['categories'])
 @auth
 async def categories_list(message: types.Message):
     categories = Categories().get_all_categories()
     answer_message = "Categories of expenses:\n\n* " +\
             ("\n* ".join([c["name"]+' ('+", ".join(c["aliases"])+')' for c in categories]))
+    await message.reply(answer_message, reply=False)
+
+
+@dp.message_handler(commands=['stats'])
+@auth
+async def show_stats(message: types.Message):
+    answer_message = get_general_stats()
     await message.reply(answer_message, reply=False)
 
 
