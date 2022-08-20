@@ -35,3 +35,9 @@ values
     ("gifts", "подарки", false, "подарок, present, презентs"),
     ("subscriptions", "подписки", false, "подписка"),
     ("other", "прочее", true, "");
+
+insert into budget (codename, daily_limit)
+values
+    ("basic_budget", 1200),
+    ("unbasic_budget", 2000),
+    ("rich_man", 3000);
