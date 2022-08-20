@@ -5,16 +5,16 @@ import db
 
 class Categories:
     def __init__(self):
-        self.__categories = self.__load_categories()
+        self._categories = self._load_categories()
 
-    def __load_categories(self) -> List[Dict]:
+    def _load_categories(self) -> List[Dict]:
         categories = db.fetchall(
             "category", "codename name is_base_expense aliases".split()
         )
-        self.__fill_aliases(categories)
+        self._fill_aliases(categories)
         return categories
 
-    def __fill_aliases(self, categories) -> List[Dict]:
+    def _fill_aliases(self, categories) -> List[Dict]:
         for index, category in enumerate(categories):
             aliases = category["aliases"].split(",")
             aliases = list(filter(None, map(str.strip, aliases)))
@@ -28,7 +28,7 @@ class Categories:
     def get_category(self, category_name: str) -> str:
         finded = None
         other_category = None
-        for category in self.__categories:
+        for category in self._categories:
             if category["codename"] == "other":
                 other_category = category
             for alias in category['aliases']:
