@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import aiohttp
 
 from categories import Categories
-from stats import get_today_stats, get_current_month_stats, get_yesterday_stats
+from stats import get_current_week_stats, get_today_stats, get_current_month_stats, get_yesterday_stats
 import exceptions
 import expenses
 
@@ -68,7 +68,12 @@ async def categories_list(message: types.Message):
 @dp.message_handler(commands=['stats'])
 @auth
 async def show_stats(message: types.Message):
-    answer_message = get_today_stats("short") + "\n\n" + get_current_month_stats("short")
+    answer_message = f"""
+                            {get_today_stats("short")} 
+                        \n{get_yesterday_stats("short")} 
+                        \n{get_current_week_stats("short")} 
+                        \n{get_current_month_stats("short")}
+                      """
     await message.reply(answer_message, reply=False)
 
 
@@ -90,6 +95,13 @@ async def show_stats(message: types.Message):
 @auth
 async def show_stats(message: types.Message):
     answer_message = get_yesterday_stats("full")
+    await message.reply(answer_message, reply=False)
+
+
+@dp.message_handler(commands=['current_week'])
+@auth
+async def show_stats(message: types.Message):
+    answer_message = get_current_week_stats("full")
     await message.reply(answer_message, reply=False)
 
 

@@ -47,6 +47,16 @@ def get_yesterday_stats(mode: str) -> str:
     return result
 
 
+def get_current_week_stats(mode: str) -> str:
+    now = _get_now_datetime()
+    monday = now - timedelta(days = now.weekday())
+    monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
+    monday = f'{monday.year:04d}-{monday.month:02d}-{monday.day:02d}'
+    today_day = f'{now.year:04d}-{now.month:02d}-{now.day:02d}'
+    result = get_period_stats("current_week", mode, monday, today_day)
+    return result
+
+
 def get_current_month_stats(mode: str) -> str:
     now = _get_now_datetime()
     first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
