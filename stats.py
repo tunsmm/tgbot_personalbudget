@@ -40,8 +40,7 @@ def get_today_stats(mode: str) -> str:
 def get_yesterday_stats(mode: str) -> str:
     now = _get_now_datetime()
     yesterday = f'{now.year:04d}-{now.month:02d}-{(now.day-1):02d}'
-    result = get_period_stats("yesterday", mode, yesterday, yesterday)
-    return result
+    return get_period_stats("yesterday", mode, yesterday, yesterday)    
 
 
 def get_current_week_stats(mode: str) -> str:
@@ -49,22 +48,19 @@ def get_current_week_stats(mode: str) -> str:
     monday = now - timedelta(days = now.weekday())
     monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
     monday = f'{monday.year:04d}-{monday.month:02d}-{monday.day:02d}'
-    result = get_period_stats("current_week", mode, monday, _get_now_formatted())
-    return result
+    return get_period_stats("current_week", mode, monday, _get_now_formatted())
 
 
 def get_current_month_stats(mode: str) -> str:
     now = _get_now_datetime()
     first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
-    result = get_period_stats("month", mode, first_day_of_month, _get_now_formatted())
-    return result
+    return get_period_stats("month", mode, first_day_of_month, _get_now_formatted())
 
 
 def get_current_year_stats(mode: str) -> str:
     now = _get_now_datetime()
     first_day_of_year = f'{now.year:04d}-01-01'
-    result = get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
-    return result
+    return get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
 
 
 def _get_budget_limit() -> int:
