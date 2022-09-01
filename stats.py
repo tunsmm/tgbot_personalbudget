@@ -60,6 +60,13 @@ def get_current_month_stats(mode: str) -> str:
     return result
 
 
+def get_current_year_stats(mode: str) -> str:
+    now = _get_now_datetime()
+    first_day_of_year = f'{now.year:04d}-01-01'
+    result = get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
+    return result
+
+
 def _get_budget_limit() -> int:
     return db.fetchall("budget", ["daily_limit"])[0]["daily_limit"]
 
