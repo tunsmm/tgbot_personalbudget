@@ -48,7 +48,7 @@ def get_current_week_stats(mode: str) -> str:
     monday = now - timedelta(days = now.weekday())
     monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
     monday = f'{monday.year:04d}-{monday.month:02d}-{monday.day:02d}'
-    return get_period_stats("current_week", mode, monday, _get_now_formatted())
+    return get_period_stats("week", mode, monday, _get_now_formatted())
 
 
 def get_current_month_stats(mode: str) -> str:

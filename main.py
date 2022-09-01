@@ -74,43 +74,54 @@ async def show_stats(message: types.Message):
                         \n{get_current_week_stats("short")} 
                         \n{get_current_month_stats("short")}
                         \n{get_current_year_stats("short")}
+                        \nFor more information you can write /help_stats
                       """
     await message.reply(answer_message, reply=False)
 
 
 @dp.message_handler(commands=['today'])
 @auth
-async def show_stats(message: types.Message):
+async def today_stats(message: types.Message):
     answer_message = get_today_stats("full")
     await message.reply(answer_message, reply=False)
 
 
 @dp.message_handler(commands=['month'])
 @auth
-async def show_stats(message: types.Message):
+async def month_stats(message: types.Message):
     answer_message = get_current_month_stats("full")
     await message.reply(answer_message, reply=False)
 
 
 @dp.message_handler(commands=['yesterday'])
 @auth
-async def show_stats(message: types.Message):
+async def yesterday_stats(message: types.Message):
     answer_message = get_yesterday_stats("full")
     await message.reply(answer_message, reply=False)
 
 
-@dp.message_handler(commands=['current_week'])
+@dp.message_handler(commands=['week'])
 @auth
-async def show_stats(message: types.Message):
+async def week_stats(message: types.Message):
     answer_message = get_current_week_stats("full")
     await message.reply(answer_message, reply=False)
 
 
 @dp.message_handler(commands=['year'])
 @auth
-async def show_stats(message: types.Message):
+async def year_stats(message: types.Message):
     answer_message = get_current_year_stats("full")
     await message.reply(answer_message, reply=False)
+
+
+@dp.message_handler(commands=['help_stats'])
+@auth
+async def help_stats(message: types.Message):
+    await message.reply(
+        "Help stats\n"
+        "To see more information about any period just write some of these words: "
+        "/today, /yesterday, /week, /month, /year", 
+        reply=False)
 
 
 @dp.message_handler(lambda message: message.text.startswith('/del'))
