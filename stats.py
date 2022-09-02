@@ -63,6 +63,12 @@ def get_current_year_stats(mode: str) -> str:
     return get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
 
 
+def get_custom_stats(date1, date2) -> str:
+    date_from = f'{date1.year:04d}-{date1.month:02d}-{date1.day:02d}'
+    date_to = f'{date2.year:04d}-{date2.month:02d}-{date2.day:02d}'
+    return get_period_stats(f"period from {date_from} to {date_to}", "full", date_from, date_to)
+
+
 def _get_budget_limit() -> int:
     return db.fetchall("budget", ["daily_limit"])[0]["daily_limit"]
 
