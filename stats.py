@@ -63,9 +63,15 @@ def get_current_year_stats(mode: str) -> str:
     return get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
 
 
-def get_custom_stats(date1, date2) -> str:
-    date_from = f'{date1.year:04d}-{date1.month:02d}-{date1.day:02d}'
-    date_to = f'{date2.year:04d}-{date2.month:02d}-{date2.day:02d}'
+def get_custom_stats(raw_message: str) -> str:
+    raw_array = raw_message.split(' ')
+    try:
+        date1 = datetime.strptime(raw_array[1], '%d%m%Y').date()
+        date2 = datetime.strptime(raw_array[2], '%d%m%Y').date()
+    except ValueError:
+        return "Wrong date format. Write date like 30012022 where 30 is day, 01 is month, 2022 is year"
+    date_from = f'{date1.year}-{date1.month:02d}-{date1.day:02d}'
+    date_to = f'{date2.year}-{date2.month:02d}-{date2.day:02d}'
     return get_period_stats(f"period from {date_from} to {date_to}", "full", date_from, date_to)
 
 

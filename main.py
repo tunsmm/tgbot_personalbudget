@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import aiohttp
 
 from categories import Categories
-from stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats
+from stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats, get_custom_stats
 import exceptions
 import expenses
 
@@ -114,13 +114,21 @@ async def year_stats(message: types.Message):
     await message.reply(answer_message, reply=False)
 
 
+@dp.message_handler(commands=['custom_stats'])
+@auth
+async def custom_stats(message: types.Message):
+    answer_message = get_custom_stats(message.text)
+    await message.answer(answer_message)
+
+
 @dp.message_handler(commands=['help_stats'])
 @auth
 async def help_stats(message: types.Message):
     await message.reply(
         "Help stats\n"
         "To see more information about any period just write some of these words: "
-        "/today, /yesterday, /week, /month, /year", 
+        "/today, /yesterday, /week, /month, /year\n"
+        "Also you can write /custom_stats and add two date at this command to return stats", 
         reply=False)
 
 
