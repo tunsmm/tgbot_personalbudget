@@ -39,7 +39,7 @@ def get_today_stats(mode: str) -> str:
 
 def get_yesterday_stats(mode: str) -> str:
     now = _get_now_datetime()
-    yesterday = f'{now.year:04d}-{now.month:02d}-{(now.day-1):02d}'
+    yesterday = f'{now.year}-{now.month:02d}-{(now.day-1):02d}'
     return get_period_stats("yesterday", mode, yesterday, yesterday)    
 
 
@@ -47,19 +47,19 @@ def get_current_week_stats(mode: str) -> str:
     now = _get_now_datetime()
     monday = now - timedelta(days = now.weekday())
     monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
-    monday = f'{monday.year:04d}-{monday.month:02d}-{monday.day:02d}'
+    monday = f'{monday.year}-{monday.month:02d}-{monday.day:02d}'
     return get_period_stats("week", mode, monday, _get_now_formatted())
 
 
 def get_current_month_stats(mode: str) -> str:
     now = _get_now_datetime()
-    first_day_of_month = f'{now.year:04d}-{now.month:02d}-01'
+    first_day_of_month = f'{now.year}-{now.month:02d}-01'
     return get_period_stats("month", mode, first_day_of_month, _get_now_formatted())
 
 
 def get_current_year_stats(mode: str) -> str:
     now = _get_now_datetime()
-    first_day_of_year = f'{now.year:04d}-01-01'
+    first_day_of_year = f'{now.year}-01-01'
     return get_period_stats("year", mode, first_day_of_year, _get_now_formatted())
 
 
