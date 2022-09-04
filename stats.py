@@ -25,13 +25,21 @@ def get_period_stats(codename: str, mode: str, day_from: date, day_to: date) -> 
                     "from category where is_base_expense=true)")
         result = cursor.fetchone()
         base_expenses = result[0] if result[0] else 0
+        budget_limit = calculate_budget_limit(day_from, day_to)
         return (f"Expenses {codename}:\n"
                 f"total — {all_expenses}\n"
-                f"basic — {base_expenses} from {_get_budget_limit()}\n\n"
+                f"basic — {base_expenses} from {budget_limit}\n\n"
                 f"See general stats: /stats")
     else: 
         return "Unexpected mode"
 
+
+def calculate_budget_limit(day_from: date, day_to: date) -> int:
+    budget_limit = _get_budget_limit()
+    time_delta = datetime.strptime(day_to, '%Y-%m-%d') - datetime.strptime(day_from, '%Y-%m-%d')
+    time_delta = time_delta.days
+    return budget_limit * (1 + time_delta)
+        
 
 def get_today_stats(mode: str) -> str:
     return get_period_stats("today", mode, _get_now_formatted(), _get_now_formatted())
