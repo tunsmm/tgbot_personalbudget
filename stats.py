@@ -4,11 +4,7 @@ import db
 
 
 def get_period_stats(codename: str, mode: str, day_from: date, day_to: date) -> str:
-    cursor = db.get_cursor()
-    cursor.execute("select sum(amount)"
-                   f"from expense where created >= '{day_from}'"
-                   f"and created <= '{day_to}'")
-    result = cursor.fetchone()
+    result = _get_sum_total_stats(day_from, day_to)
     if not result[0]:
         return f"No expenses {codename}"
     all_expenses = result[0]
@@ -18,14 +14,9 @@ def get_period_stats(codename: str, mode: str, day_from: date, day_to: date) -> 
             f"total — {all_expenses}\n"
             f"See full stats: /{codename}")
     elif mode == "full":
-        cursor.execute("select sum(amount) "
-                    f"from expense where created >= '{day_from}' "
-                    f"and created <= '{day_to}' "
-                    "and category_codename in (select codename "
-                    "from category where is_base_expense=true)")
-        result = cursor.fetchone()
+        result = _get_sum_basic_stats(day_from, day_to)
         base_expenses = result[0] if result[0] else 0
-        budget_limit = calculate_budget_limit(day_from, day_to)
+        budget_limit = _calculate_budget_limit(day_from, day_to)
         return (f"Expenses {codename}:\n"
                 f"total — {all_expenses}\n"
                 f"basic — {base_expenses} from {budget_limit}\n\n"
@@ -34,7 +25,25 @@ def get_period_stats(codename: str, mode: str, day_from: date, day_to: date) -> 
         return "Unexpected mode"
 
 
-def calculate_budget_limit(day_from: date, day_to: date) -> int:
+def _get_sum_total_stats(day_from: date, day_to: date):
+    cursor = db.get_cursor()
+    cursor.execute("select sum(amount)"
+                   f"from expense where created >= '{day_from}'"
+                   f"and created <= '{day_to}'")
+    return cursor.fetchone()
+
+
+def _get_sum_basic_stats(day_from: date, day_to: date):
+    cursor = db.get_cursor()
+    cursor.execute("select sum(amount) "
+                    f"from expense where created >= '{day_from}' "
+                    f"and created <= '{day_to}' "
+                    "and category_codename in (select codename "
+                    "from category where is_base_expense=true)")
+    return cursor.fetchone()
+
+
+def _calculate_budget_limit(day_from: date, day_to: date) -> int:
     budget_limit = _get_budget_limit()
     time_delta = datetime.strptime(day_to, '%Y-%m-%d') - datetime.strptime(day_from, '%Y-%m-%d')
     time_delta = time_delta.days
