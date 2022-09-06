@@ -4,10 +4,10 @@ from aiogram import Bot, Dispatcher, executor, types
 from dotenv import load_dotenv
 import aiohttp
 
-from categories import Categories
-from stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats, get_custom_stats
-import exceptions
-import expenses
+from utils.categories import Categories
+from utils.stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats, get_custom_stats
+import utils.exceptions as exceptions
+import utils.expenses as expenses
 
 # load local environment
 load_dotenv()
