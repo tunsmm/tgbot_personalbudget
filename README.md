@@ -32,4 +32,4 @@ Let's see how this project is structured:
 - README.md: This file.
 
 ## Feedback and new ideas
-I haven't still finished this project, but if you have feedback or any new ideas for this project, then you can write me in TG using this link: [t.me/tunsmm](t.me/tunsmm)
+I haven't still finished this project, but if you have feedback or any new ideas for this project, then you can write me in TG using this link: [t.me/tunsmm](https://t.me/tunsmm)
