@@ -1,13 +1,8 @@
 import os
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, executor
 from dotenv import load_dotenv
-import aiohttp
 
-from utils.categories import Categories
-from utils.stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats, get_custom_stats
-import utils.exceptions as exceptions
-import utils.expenses as expenses
 import bot.handlers
 
 # load local environment
