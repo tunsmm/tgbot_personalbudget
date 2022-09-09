@@ -3,7 +3,7 @@ import aiohttp
 
 from main import auth, dp
 from utils.categories import Categories
-from utils.stats import get_current_week_stats, get_current_year_stats, get_today_stats, get_current_month_stats, get_yesterday_stats, get_custom_stats
+import utils.stats as stats
 import utils.exceptions as exceptions
 import utils.expenses as expenses
 
@@ -52,11 +52,11 @@ async def categories_list(message: types.Message):
 async def show_stats(message: types.Message):
     """Return basic stats information. Includes stats for today, yesterday, week, month, year"""
     answer_message = f"""
-                            {get_today_stats("short")} 
-                        \n{get_yesterday_stats("short")} 
-                        \n{get_current_week_stats("short")} 
-                        \n{get_current_month_stats("short")}
-                        \n{get_current_year_stats("short")}
+                            {stats.get_today_stats("short")} 
+                        \n{stats.get_yesterday_stats("short")} 
+                        \n{stats.get_current_week_stats("short")} 
+                        \n{stats.get_current_month_stats("short")}
+                        \n{stats.get_current_year_stats("short")}
                         \nFor more information you can write /help_stats
                       """
     await message.answer(answer_message)
@@ -66,7 +66,7 @@ async def show_stats(message: types.Message):
 @auth
 async def today_stats(message: types.Message):
     """Return stats for today"""
-    answer_message = get_today_stats("full")
+    answer_message = stats.get_today_stats("full")
     await message.answer(answer_message)
 
 
@@ -74,7 +74,7 @@ async def today_stats(message: types.Message):
 @auth
 async def month_stats(message: types.Message):
     """Return stats for month"""
-    answer_message = get_current_month_stats("full")
+    answer_message = stats.get_current_month_stats("full")
     await message.answer(answer_message)
 
 
@@ -82,7 +82,7 @@ async def month_stats(message: types.Message):
 @auth
 async def yesterday_stats(message: types.Message):
     """Return stats for yesterday"""
-    answer_message = get_yesterday_stats("full")
+    answer_message = stats.get_yesterday_stats("full")
     await message.answer(answer_message)
 
 
@@ -90,7 +90,7 @@ async def yesterday_stats(message: types.Message):
 @auth
 async def week_stats(message: types.Message):
     """Return stats for week"""
-    answer_message = get_current_week_stats("full")
+    answer_message = stats.get_current_week_stats("full")
     await message.answer(answer_message)
 
 
@@ -98,7 +98,7 @@ async def week_stats(message: types.Message):
 @auth
 async def year_stats(message: types.Message):
     """Return stats for year"""
-    answer_message = get_current_year_stats("full")
+    answer_message = stats.get_current_year_stats("full")
     await message.answer(answer_message)
 
 
@@ -111,7 +111,7 @@ async def custom_stats(message: types.Message):
     second two numbers are months
     last four numbers are years 
     """
-    answer_message = get_custom_stats(message.text)
+    answer_message = stats.get_custom_stats(message.text)
     await message.answer(answer_message)
 
 
